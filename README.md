@@ -26,24 +26,24 @@ load(brca.data)
 
 # Build correlation matrices by subtype
 cor.list <- BuildCorList(
-						mrna.mat    = mrna,
-						mirna.mat   = mirna,
-						group.label = index$paper_BRCA_Subtype_PAM50
-						)
+	mrna.mat    = mrna,
+	mirna.mat   = mirna,
+	group.label = index$paper_BRCA_Subtype_PAM50
+	)
 
-# Build target matrix
+# Build target matrix	
 target.mat <- BuildTargetMat(
-							cor.list  = cor.list,
-							Pair.df   = "TargetScan",
-							gene.name = "hgnc_symbol"
-							)
+	cor.list  = cor.list,
+	Pair.df   = "TargetScan",
+	gene.name = "hgnc_symbol"
+	)
 
 
 results <- Run_diffreg(
-						cor.list          = cor.list,
-						target.mat        = target.mat,
-						min.target.number = 5,
-						direction         = "Negative"
-						)
+	cor.list          = cor.list,
+	target.mat        = target.mat,
+	min.target.number = 5,
+	direction         = "Negative"
+	)
 ```
 
