@@ -13,6 +13,7 @@ Run_permutation(
   do.spqn = TRUE,
   target.mat,
   group.label,
+  do.parallel = FALSE,
   n.iter = 1000,
   seed = 1234
 )
@@ -31,6 +32,8 @@ Run_permutation(
 \item{target.mat}{A binary matrix indicating target with miRNA on columns and mRNA on rows}
 
 \item{group.label}{A factor vector subtype label for the samples}
+
+\item{do.parallel}{A logical variable indicating whether parallization will be performed}
 
 \item{n.iter}{An integer indicating the number of interaions for n.iter}
 

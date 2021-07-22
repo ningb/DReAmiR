@@ -382,11 +382,13 @@ normalize_correlation <- function(cor_mat, ave_exp1, ave_exp2, ngrp=20, size_grp
 #' @param mirna.mat An expression matrix for miRNAs
 #' @param group.label A factor object for subtype/group
 #' @param cor.list A list object from BuildCorList()
+#' @param numCores An integer indicating the number of cores to use
 #' @param ... Arguments passed to normalize_correlation()
 #' @return A list of normalized correlation matrices
 #' 
+#' import paralell
 #' @export
-RunGroupSpQN <- function(mrna.mat, mirna.mat, group.label, cor.list, ...) {
+RunGroupSpQN <- function(mrna.mat, mirna.mat, group.label, cor.list, numCores, ...) {
 
 	# Check names
 	if (!identical(levels(group.label), names(cor.list))) {
@@ -407,11 +409,12 @@ RunGroupSpQN <- function(mrna.mat, mirna.mat, group.label, cor.list, ...) {
 
 	mirna_ave_exp <- .GetAveExpbySubtype(expr.mat=mirna.mat, group.label=group.label)
 
-	perm.spqn.cor.mat.list <- bplapply(levels(as.factor(group.label)), function(x) 
+	perm.spqn.cor.mat.list <- lapply(levels(as.factor(group.label)), function(x) 
 														normalize_correlation(cor.list[[x]], 
 														ave_exp1=mrna_ave_exp[[x]], 
 														ave_exp2=mirna_ave_exp[[x]], 
-														...))
+														...),
+														mc.cores = numCores)
 
 	return(perm.spqn.cor.mat.list)
 }

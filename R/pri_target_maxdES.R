@@ -128,7 +128,10 @@ Find_Target_Max_dES <- function(gs, cor.list, main, ref,
 	genes.des <- c()
 	current.gs <- gs
 
-	for (i in seq_len(length(gs))) {
+	pb <- progress_bar$new(total = 100)
+	for (i in seq_len(length(gs) - min.gs.size)) {
+		  
+		pb$tick()
 
 		# Start from all, Calculate new remove.des
 		new.es.res <- .Diff_by_Remove(gs=current.gs, main.rk=rank.list[[main]], ref.rk=rank.list[[ref]], direction=direction, n.iter=n.iter, alpha=alpha)
@@ -148,7 +151,7 @@ Find_Target_Max_dES <- function(gs, cor.list, main, ref,
 		# Record the gene removed and the score at the current step
 		genes.des <- setNames(c(genes.des, new.des), c(names(genes.des), this.remove))
 
-		print(paste("Iteration ", i, " removes ", this.remove, " new dES=", new.des, sep=""))
+		# print(paste("Iteration ", i, " removes ", this.remove, " new dES=", new.des, sep=""))
 
 		# Once we reach the desired number of genes, add the remainig genes to the genes.des and exit loop
 		if (length(current.gs) <= min.gs.size) {
@@ -157,6 +160,9 @@ Find_Target_Max_dES <- function(gs, cor.list, main, ref,
 			genes.des <- c(genes.des, remaining.des)
 			break
 		}
+
+		  Sys.sleep(1 / 100)
+
 	}
 
 	# Find the gene removing which gives the largest dES and select the remainings

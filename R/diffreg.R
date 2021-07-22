@@ -6,7 +6,7 @@
 #' @return A walking score vector
 .CalcGseaStat <- function(ranklist, gs, alpha=NULL) {
 
-	if (!is.null(alpha)) {
+	if (is.null(alpha)) {
 		alpha <- 0.1
 	}
 
@@ -220,6 +220,7 @@ Run_diffreg <- function(cor.list, target.mat, min.target.number=5, direction="Ne
 #' @param raw.mirna.mat (optional) A raw matrix of miRNA expression (genes at rows and samples at columns)
 #' @param target.mat A binary matrix indicating target with miRNA on columns and mRNA on rows
 #' @param group.label A factor vector subtype label for the samples
+#' @param do.parallel A logical variable indicating whether parallization will be performed
 #' @param n.iter An integer indicating the number of interaions for n.iter
 #' @param seed A integer for permutation seed
 #' @return A data frame similar to output from Run_diffreg() with additional permutation significance values
@@ -231,6 +232,7 @@ Run_permutation <- function(diffreg.res, mrna.mat, mirna.mat,
 							raw.mrna.mat=NULL, raw.mirna.mat=NULL,
 							do.spqn=TRUE,
 							target.mat, group.label, 
+							do.parallel = FALSE, 
 							n.iter=1000, seed=1234) {
 
 	# Check if raw matrix is there; if not the mrna.mat and mirna.mat has expression value needed for normalization
@@ -245,6 +247,13 @@ Run_permutation <- function(diffreg.res, mrna.mat, mirna.mat,
 	# Do permutation test: shuffle each rank list
 	perm.res <- NULL
 	perm.res[row.names(diffreg.res)] <- list(NULL)
+
+	# Setup parallization
+	if (isTRUE(do.parallel)) {
+		numCores <- detectCores()
+	} else {
+		numCores = 1
+	}
 
 	# Check number of levels
 	if (length(levels(group.label)) == 2) {
@@ -264,7 +273,8 @@ Run_permutation <- function(diffreg.res, mrna.mat, mirna.mat,
 				perm.spqn.cor.mat.list <- RunGroupSpQN(mrna.mat=raw.mrna.mat, 
 													mirna.mat=raw.mirna.mat, 
 													group.label=perm.label, 
-													cor.list=perm.cor.mat.list)
+													cor.list=perm.cor.mat.list,
+													numCores=numCores)
 			} else {
 				perm.spqn.cor.mat.list <- perm.cor.mat.list
 			}
@@ -284,11 +294,11 @@ Run_permutation <- function(diffreg.res, mrna.mat, mirna.mat,
 				# print(i)
 			}
 
-			diffreg.res$Perm.pval <- unlist(lapply(row.names(diffreg.res), function(x) 1 - sum(diffreg.res[x, ]$KSval > perm.res[[x]])/n.iter))
-			diffreg.res$FDR <- p.adjust(diffreg.res$Perm.pval, "fdr")
-			diffreg.res <- diffreg.res[order(diffreg.res$ADval, decreasing=TRUE), ]
-
 		}
+
+		diffreg.res$Perm.pval <- unlist(lapply(row.names(diffreg.res), function(x) 1 - sum(diffreg.res[x, ]$KSval > perm.res[[x]])/n.iter))
+		diffreg.res$FDR <- p.adjust(diffreg.res$Perm.pval, "fdr")
+		diffreg.res <- diffreg.res[order(diffreg.res$ADval, decreasing=TRUE), ]
 
 	} else {
 
@@ -307,7 +317,8 @@ Run_permutation <- function(diffreg.res, mrna.mat, mirna.mat,
 				perm.spqn.cor.mat.list <- RunGroupSpQN(mrna.mat=raw.mrna.mat, 
 													mirna.mat=raw.mirna.mat, 
 													group.label=perm.label, 
-													cor.list=perm.cor.mat.list)
+													cor.list=perm.cor.mat.list,
+													numCores=numCores)
 			} else {
 				perm.spqn.cor.mat.list <- perm.cor.mat.list
 			}
@@ -327,10 +338,12 @@ Run_permutation <- function(diffreg.res, mrna.mat, mirna.mat,
 				# print(i)
 			}
 
-			diffreg.res$Perm.pval <- unlist(lapply(row.names(diffreg.res), function(x) 1 - sum(diffreg.res[x, ]$ADval > perm.res[[x]])/n.iter))
-			diffreg.res$FDR <- p.adjust(diffreg.res$Perm.pval, "fdr")
-			diffreg.res <- diffreg.res[order(diffreg.res$ADval, decreasing=TRUE), ]
 		}
+
+		diffreg.res$Perm.pval <- unlist(lapply(row.names(diffreg.res), function(x) 1 - sum(diffreg.res[x, ]$ADval > perm.res[[x]])/n.iter))
+		diffreg.res$FDR <- p.adjust(diffreg.res$Perm.pval, "fdr")
+		diffreg.res <- diffreg.res[order(diffreg.res$ADval, decreasing=TRUE), ]
+
 	}
 	return(diffreg.res)
 }

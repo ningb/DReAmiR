@@ -4,7 +4,7 @@
 \alias{RunGroupSpQN}
 \title{Given a list of correlation matrcies, return the SpQN normalized matrices}
 \usage{
-RunGroupSpQN(mrna.mat, mirna.mat, group.label, cor.list, ...)
+RunGroupSpQN(mrna.mat, mirna.mat, group.label, cor.list, numCores, ...)
 }
 \arguments{
 \item{mrna.mat}{An expression matrix for mRNAs}
@@ -15,10 +15,14 @@ RunGroupSpQN(mrna.mat, mirna.mat, group.label, cor.list, ...)
 
 \item{cor.list}{A list object from BuildCorList()}
 
+\item{numCores}{An integer indicating the number of cores to use}
+
 \item{...}{Arguments passed to normalize_correlation()}
 }
 \value{
 A list of normalized correlation matrices
+
+import paralell
 }
 \description{
 Given a list of correlation matrcies, return the SpQN normalized matrices
