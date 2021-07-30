@@ -237,10 +237,12 @@ Run_permutation <- function(diffreg.res, mrna.mat, mirna.mat,
 
 	# Check if raw matrix is there; if not the mrna.mat and mirna.mat has expression value needed for normalization
 	if(is.null(raw.mrna.mat)){
+		message("Raw gene expression missing. Using mrna.mat as raw.mrna.mat.\n")
 		raw.mrna.mat <- mrna.mat
 	}
 
 	if(is.null(raw.mirna.mat)){
+		message("Raw miRNA expression missing. Using mirna.mat as raw.mrna.mat.\n")
 		raw.mirna.mat <- mirna.mat
 	}
 

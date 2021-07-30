@@ -409,7 +409,7 @@ RunGroupSpQN <- function(mrna.mat, mirna.mat, group.label, cor.list, numCores, .
 
 	mirna_ave_exp <- .GetAveExpbySubtype(expr.mat=mirna.mat, group.label=group.label)
 
-	perm.spqn.cor.mat.list <- lapply(levels(as.factor(group.label)), function(x) 
+	perm.spqn.cor.mat.list <- mclapply(levels(as.factor(group.label)), function(x) 
 														normalize_correlation(cor.list[[x]], 
 														ave_exp1=mrna_ave_exp[[x]], 
 														ave_exp2=mirna_ave_exp[[x]], 
