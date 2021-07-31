@@ -1,14 +1,15 @@
-#
-# Setup working environment and prase arguments
-# --------------------------------------------------------------------------
-library(lqmm)
-library(MASS)
-library(kSamples)
-
-set.seed(1)
-
+#' Generate Simulation Data
+#' 
+#' @param Ntargets An integer giving the number of targets per miRNA
+#' @param Nvar.percent A numeric value giving the percentage of targets to be variable between groups
+#' @param Nsample An integer indicating the number of samples per group
+#' @return A list containing simulated data
+#' 
+#' @importFrom lqmm make.positive.definite
+#' @importFrom MASS mvrnorm
+#' @importFrom kSamples ad.test
 Generate_simulation <- function(Ntargets, Nvar.percent, Nsample) {
-
+	set.seed(1)
 	#
 	# Target matrices for three groups
 	# --------------------------------------------------------------------------

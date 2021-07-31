@@ -22,13 +22,17 @@ To run the main function:
 ``` r
 library(diffreg)
 
-load(brca.data)
+# Read-in simulated data
+target.mat <- sim.data[[1]]
+group.label <- sim.data[[2]]
+mrna.mat <- sim.data[[3]]
+mirna.mat <- sim.data[[4]]
 
 # Build correlation matrices by subtype
 cor.list <- BuildCorList(
-	mrna.mat    = mrna,
-	mirna.mat   = mirna,
-	group.label = index$paper_BRCA_Subtype_PAM50
+	mrna.mat    = mrna.mat,
+	mirna.mat   = mirna.mat,
+	group.label = group.label
 	)
 
 # Build target matrix	
@@ -37,7 +41,6 @@ target.mat <- BuildTargetMat(
 	Pair.df   = "TargetScan",
 	gene.name = "hgnc_symbol"
 	)
-
 
 results <- Run_diffreg(
 	cor.list          = cor.list,
