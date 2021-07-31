@@ -161,7 +161,7 @@ Find_Target_Max_dES <- function(gs, cor.list, main, ref,
 			break
 		}
 
-		  Sys.sleep(1 / 100)
+		Sys.sleep(1 / 100)
 
 	}
 

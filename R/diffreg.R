@@ -225,6 +225,7 @@ Run_diffreg <- function(cor.list, target.mat, min.target.number=5, direction="Ne
 #' @param seed A integer for permutation seed
 #' @return A data frame similar to output from Run_diffreg() with additional permutation significance values
 #' 
+#' @import progress
 #' @importFrom kSamples ad.test
 #' @export
 #' 
@@ -260,9 +261,10 @@ Run_permutation <- function(diffreg.res, mrna.mat, mirna.mat,
 	# Check number of levels
 	if (length(levels(group.label)) == 2) {
 
+		pb <- progress_bar$new(total = 100)
 		for (iter in seq(1:n.iter)) {
 
-			print(paste("Running Iteration ", iter, sep=""))
+			pb$tick()
 
 			# Get Permutation cor mat
 			perm.label <- sample(group.label)
@@ -296,6 +298,8 @@ Run_permutation <- function(diffreg.res, mrna.mat, mirna.mat,
 				# print(i)
 			}
 
+			Sys.sleep(1 / 100)
+
 		}
 
 		diffreg.res$Perm.pval <- unlist(lapply(row.names(diffreg.res), function(x) 1 - sum(diffreg.res[x, ]$KSval > perm.res[[x]])/n.iter))
@@ -304,9 +308,10 @@ Run_permutation <- function(diffreg.res, mrna.mat, mirna.mat,
 
 	} else {
 
+		pb <- progress_bar$new(total = 100)
 		for (iter in seq(1:n.iter)) {
 
-			print(paste("Running Iteration ", iter, sep=""))
+			pb$tick()
 
 			# Get Permutation cor mat
 			perm.label <- sample(group.label)
@@ -339,6 +344,8 @@ Run_permutation <- function(diffreg.res, mrna.mat, mirna.mat,
 				perm.res[[i]][iter] <- this.ad$ad[1,2]
 				# print(i)
 			}
+
+			Sys.sleep(1 / 100)
 
 		}
 
