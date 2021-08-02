@@ -270,7 +270,8 @@ Run_permutation <- function(diffreg.res, mrna.mat, mirna.mat,
 			perm.label <- sample(group.label)
 			perm.cor.mat.list <- BuildCorList(mrna.mat=mrna.mat, 
 												mirna.mat=mirna.mat, 
-												group.label=perm.label)
+												group.label=perm.label,
+												numCores=numCores)
 
 			# Do miSpQN on permutation cor mat
 			if (isTRUE(do.spqn)) {
@@ -317,7 +318,8 @@ Run_permutation <- function(diffreg.res, mrna.mat, mirna.mat,
 			perm.label <- sample(group.label)
 			perm.cor.mat.list <- BuildCorList(mrna.mat=mrna.mat, 
 												mirna.mat=mirna.mat, 
-												group.label=perm.label)
+												group.label=perm.label,
+												numCores=numCores)
 
 			# Do miSpQN on permutation cor mat
 			if (isTRUE(do.spqn)) {

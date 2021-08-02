@@ -386,9 +386,9 @@ normalize_correlation <- function(cor_mat, ave_exp1, ave_exp2, ngrp=20, size_grp
 #' @param ... Arguments passed to normalize_correlation()
 #' @return A list of normalized correlation matrices
 #' 
-#' import paralell
+#' @import parallel
 #' @export
-RunGroupSpQN <- function(mrna.mat, mirna.mat, group.label, cor.list, numCores, ...) {
+RunGroupSpQN <- function(mrna.mat, mirna.mat, group.label, cor.list, numCores=1, ...) {
 
 	# Check names
 	if (!identical(levels(group.label), names(cor.list))) {

@@ -2,40 +2,62 @@
 #' 
 #' @param mrna.mat A matrix of mRNA expression (genes at rows and samples at columns)
 #' @param mirna.mat A matrix of miRNA expression (genes at rows and samples at columns)
-#' @param raw.mrna.mat A raw matrix of mRNA expression (genes at rows and samples at columns)
-#' @param raw.mirna.mat A raw matrix of miRNA expression (genes at rows and samples at columns)
 #' @param group.label A factor vector subtype label for the samples
-#' @param cor.type A character string indicating type of correlation to do; options are "pearson", "kendall", "spearman"
-#' @param do.libnorm A logic type indicating whether library size normalization (logCPM) is needed
-#' @param do.spqn A logic type indicating whether mean-correlation relationship is needed to be removed
+#' @param numCores An integer indicating the number of cores to use
 #' 
+#' @import parallel
 #' @export
-BuildCorList <- function(mrna.mat, mirna.mat, group.label) {
+BuildCorList <- function(mrna.mat, mirna.mat, group.label, numCores=1) {
 
-	# Check dimension
+	# Check format of group.label: factor variable; if not, turn in to a factor
+	if(class(group.label) != "factor") {
+		group.label <- as.factor(group.label)
+		warning("Changed class of group.label to factor.")
+	} 
 
-	# Check raw vs. normalized matrices size
+	# Check if names exist: sample names at columns of miRNA/mRNA matrices; miRNA and mRNA names at rows; names for group.label
+	if(is.null(rownames(mrna.mat)) | is.null(rownames(mirna.mat))) {
+		stop("Input misses gene or miRNA names")
+	} 
+	if(is.null(colnames(mrna.mat)) | is.null(colnames(mirna.mat)) | is.null(names(group.label))) {
+		stop("Inputs misses sample names\n")
+	} 
 
-	# Check format
+	# Select common samples
+	common.samples <- Reduce(intersect, list(names(group.label), colnames(mrna.mat), colnames(mirna.mat)))
+
+	# Check if duplicated sample name exists
+	if(any(duplicated(common.samples))) {
+		stop("Duplicated sample name exists. Please fix before running this function.\n")
+	}
+
+	# Subset data to only the overlapped samples
+	if(length(common.samples) != length(group.label) | length(common.samples) != ncol(mrna.mat) | length(common.samples) != ncol(mirna.mat)) {
+		warning("Detected unequal samples sizes. Only the overlapped sampels are used.\n")
+		group.label <- group.label[common.samples]
+		mrna.mat <- mrna.mat[, common.samples]
+		mirna.mat <- mirna.mat[, common.samples]
+	}
+
+	# Check if samples sizes meet requirement
+	if (min(table(group.label)) <= 30) {
+		warning("One group has sample size smaller than 30. Correlation might not work well.\n")
+	}
 
 	# Form correlation matrix per group
+	expr.mat <- rbind(mrna.mat, mirna.mat)
+	cor.list <- mclapply(levels(group.label), 
+						function(x) cor(t(expr.mat[, group.label == x])), 
+						mc.cores = numCores)
 
 	# Subset to a miRNA-mRNA correlation matrix
+	cor.list <- mclapply(cor.list, 
+						function(x) x[row.names(mrna.mat), row.names(mirna.mat)], 
+						mc.cores = numCores)
 
 	# Attach name to the list
-
-	names(cor.list) <- group.label
-	
-	return(cor.list)
-}
-
-
-#' Generate a list of correlation matrices for later analysis
-BuildCorList <- function(mrna.mat, mirna.mat, group.label) {
-	expr.mat <- rbind(mrna.mat, mirna.mat)
-	cor.list <- lapply(levels(group.label), function(x) cor(t(expr.mat[, group.label == x])))
-	cor.list <- lapply(cor.list, function(x) x[1:nrow(mrna.mat), (nrow(mrna.mat)+1):ncol(x)])
 	names(cor.list) <- levels(group.label)
+
 	return(cor.list)
 }
 

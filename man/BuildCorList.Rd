@@ -4,9 +4,7 @@
 \alias{BuildCorList}
 \title{Generate a list of correlation matrices for later analysis}
 \usage{
-BuildCorList(mrna.mat, mirna.mat, group.label)
-
-BuildCorList(mrna.mat, mirna.mat, group.label)
+BuildCorList(mrna.mat, mirna.mat, group.label, numCores = 1)
 }
 \arguments{
 \item{mrna.mat}{A matrix of mRNA expression (genes at rows and samples at columns)}
@@ -15,18 +13,8 @@ BuildCorList(mrna.mat, mirna.mat, group.label)
 
 \item{group.label}{A factor vector subtype label for the samples}
 
-\item{raw.mrna.mat}{A raw matrix of mRNA expression (genes at rows and samples at columns)}
-
-\item{raw.mirna.mat}{A raw matrix of miRNA expression (genes at rows and samples at columns)}
-
-\item{cor.type}{A character string indicating type of correlation to do; options are "pearson", "kendall", "spearman"}
-
-\item{do.libnorm}{A logic type indicating whether library size normalization (logCPM) is needed}
-
-\item{do.spqn}{A logic type indicating whether mean-correlation relationship is needed to be removed}
+\item{numCores}{An integer indicating the number of cores to use}
 }
 \description{
-Generate a list of correlation matrices for later analysis
-
 Generate a list of correlation matrices for later analysis
 }

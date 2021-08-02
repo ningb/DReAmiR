@@ -99,7 +99,12 @@ Generate_simulation <- function(Ntargets, Nvar.percent, Nsample) {
 	group.label <- as.factor(rep(c("A", "B", "C"), each=Nsample))
 	names(group.label) <- colnames(mrna.mat)
 
-	sim.data <- list(predict.target = predict.target,
+	target.mat <- matrix(0, nrow=nrow(mrna.mat), ncol=nrow(mirna.mat), dimnames=list(row.names(mrna.mat), row.names(mirna.mat)))
+	for (i in names(predict.target)) {
+		target.mat[predict.target[[i]], i] <- 1
+	}
+
+	sim.data <- list(target.mat = target.mat,
 					group.label = group.label, 
 					mrna.mat = mrna.mat, 
 					mirna.mat = mirna.mat)
