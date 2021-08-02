@@ -82,6 +82,15 @@ results <- Run_diffreg(
 # miR_3  10.68900 1.9488e-06 0.6142691 0.6680506 0.2988116
 # miR_4   8.22520 5.0877e-05 0.7027055 0.6946374 0.3628987
 # miR_5   5.89900 6.9189e-04 0.6278100 0.7477924 0.4162563
+
+# Optional: A permutation test can be performed to better estimate significance value
+permutation.result <- Run_permutation(
+	diffreg.res = results,
+	mrna.mat    = mrna.mat,
+	mirna.mat   = mirna.mat,
+	target.mat  = target.mat,
+	group.label = group.label,
+	)
 ```
 ### Plot an enrichment plot for an significant miRNA
 ```r
@@ -119,7 +128,7 @@ cluster.result <- AssignTargetCluster(
 	)
 
 # Run dES Maximization for group A relative to B
-max_dES_result <- Find_Target_Max_dES(
+max.dES.result <- Find_Target_Max_dES(
 	gs        = le.gene[["A"]],
 	cor.list  = cor.list,
 	main      = "A",
