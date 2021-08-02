@@ -52,12 +52,15 @@ cor.list <- BuildCorList(
 
 # Build target matrix	
 target.mat <- BuildTargetMat(
-	cor.list  = cor.list,
-	Pair.df   = "TargetScan",
-	gene.name = "hgnc_symbol"
+	mrna.mat   = mrna.mat,
+	mirna.mat  = mirna.mat,
+	DB         = c("targetcsan", "mirdb", "starbase"),
+	org        = "hsa",
+	gene.name  = "target_symbol"
+	min.cutoff = 1
 	)
 ```
-### Optional: run spatial quantile normalization on the correlation matrices
+### Optional: run spatial quantile normalization on the correlation matrices [[1]](#1).
 *Note: this is not going to work in this toy dat since it is too small*
 ```r
 cor.list <- RunGroupSpQN(
@@ -102,7 +105,7 @@ Plot_enrichment(
 ```
 <img src="media/Diff_reg_example.png" height="400px" class="center"/>
 
-###	Extract leading-edge gene and prioritize targets using either Graph Representation Learning or dES maximization
+###	Extract leading-edge gene and prioritize targets using either <u>Graph Representation Learning [[2]](#2)</u> or <u>dES maximization</u>.
 ```r
 # Get the leading-edge genes
 le.gene <- GetLE(
@@ -136,3 +139,9 @@ max.dES.result <- Find_Target_Max_dES(
 	direction = "Negative"
 	)
 ```
+## References
+<a id="1">[1]</a> :
+Wang, Yi, Stephanie C Hicks, and Kasper D Hansen. 2020. “Co-Expression Analysis Is Biased by a Mean-Correlation Relationship.” bioRxiv, 2020.02.13.944777. https://doi.org/10.1101/2020.02.13.944777.
+
+<a id="2">[2]</a> :
+https://github.com/YosefLab/Rline

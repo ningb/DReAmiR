@@ -2,22 +2,33 @@
 % Please edit documentation in R/utils.R
 \name{BuildTargetMat}
 \alias{BuildTargetMat}
-\title{Generate a list of correlation matrices for later analysis}
+\title{Generate a binarized target matrix}
 \usage{
 BuildTargetMat(
-  cor.list,
-  Pair.df = c(),
-  gene.name = c("hgnc_symbol", "ensembl_ID")
+  mrna.mat,
+  mirna.mat,
+  DB,
+  org = "hsa",
+  gene_id = "target_symbol",
+  min.cutoff = 1
 )
 }
 \arguments{
-\item{mrna.mat}{A matrix of mRNA expression (genes at rows and samples at columns)}
+\item{mrna.mat}{*A matrix of mRNA expression (genes at rows and samples at columns)}
 
-\item{mirna.mat}{A matrix of miRNA expression (genes at rows and samples at columns)}
+\item{mirna.mat}{*A matrix of miRNA expression (genes at rows and samples at columns)}
+
+\item{DB}{*A string vector showing which databases to use}
+
+\item{org}{*A string indiciating whether human or mice target data use}
+
+\item{gene_id}{*A character string showing which type of gene ID to use. Can be: target_symbol,target_entrez or target_ensembl}
+
+\item{min.cutoff}{An integer indicating minimum database predictions required for target information}
 }
 \value{
-A binary target matrix with mRNA on rows and miRNA on cols
+A binary target matrix. 1 means predicted target pair, and 0 means not.
 }
 \description{
-Generate a list of correlation matrices for later analysis
+Generate a binarized target matrix
 }

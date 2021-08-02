@@ -61,14 +61,74 @@ BuildCorList <- function(mrna.mat, mirna.mat, group.label, numCores=1) {
 	return(cor.list)
 }
 
-#' Generate a list of correlation matrices for later analysis
+#' Generate a binarized target matrix
 #' 
-#' @param mrna.mat A matrix of mRNA expression (genes at rows and samples at columns)
-#' @param mirna.mat A matrix of miRNA expression (genes at rows and samples at columns)
-#' @return A binary target matrix with mRNA on rows and miRNA on cols
+#' @param mrna.mat *A matrix of mRNA expression (genes at rows and samples at columns)
+#' @param mirna.mat *A matrix of miRNA expression (genes at rows and samples at columns)
+#' @param DB *A string vector showing which databases to use
+#' @param org *A string indiciating whether human or mice target data use
+#' @param gene_id *A character string showing which type of gene ID to use. Can be: target_symbol,target_entrez or target_ensembl
+#' @param min.cutoff An integer indicating minimum database predictions required for target information
+#' @return A binary target matrix. 1 means predicted target pair, and 0 means not. 
 #' 
+#' @import multiMiR
 #' @export
-BuildTargetMat <- function(cor.list, Pair.df=c(), gene.name=c("hgnc_symbol", "ensembl_ID")) {}
+BuildTargetMat <- function(mrna.mat, mirna.mat, DB, org="hsa", gene_id="target_symbol", min.cutoff=1) {
+
+	# Examine whether the gene and miRNA names exist
+	if(is.null(row.names(mrna.mat)) | is.null(row.names(mirna.mat))) {
+		stop("Both mRNA and miRNA matrix should have row.names for quering target information.\n")
+	}
+
+	# Check whether min.cutoff is less than total number of DB queried
+	if (min.cutoff < length(DB)) {
+		stop("min.cutoff should be smaller than the total number of datbases queired.\n")
+	}
+
+	# Use multiMiR to extract target information for all the databases listed in DB
+	multimir_results <- lapply(DB, 
+						function(x)
+						get_multimir(org = org,
+									mirna = row.names(mirna.mat),
+									target = row.names(mrna.mat),
+									table = x))
+	names(multimir_results) <- DB
+
+	# Extract the target as a dataframe
+	multimir_results <- lapply(multimir_results, function(x) x@data)	
+
+	# Subset to only the extpressed genes and miRNAs and transform each element to a matrix for later usage
+	multimir_results <- lapply(multimir_results, 
+								function(x)
+								as.matrix(x[x[,gene_id] %in% row.names(mrna.mat) & x$mature_mirna_id %in% row.names(mirna.mat), ]))
+
+	# Build a binary target matrix for each database queried
+	# Edgelist calculation is quite fast. For-loop can be used here for clarity.
+	# For each edge in the edgelist, fill 1 in that corresponding cell
+	# Using `mature_mirna_id` and the user input `gene_id`
+	# This is done for each DB, so we have several target.mat in a list
+	target.mat.list <- list()
+	for (db.use in DB) {
+		# Initiate an empty target matrix with the same size as mrna*mirna
+		target.mat <- matrix(0, nrow=nrow(mrna.mat), ncol=nrow(mirna.mat), dimnames=list(row.names(mrna.mat), row.names(mirna.mat)))
+		
+		# Fill the cells with information from multimir_results
+		target.mat[multimir_results[[db.use]][, c(gene_id, "mature_mirna_id")]] <- 1
+
+		# Add to target.mat.list
+		target.mat.list[[db.use]] <- target.mat
+	}
+
+	# The sum all target matrix together
+	target.mat <- Reduce("+", target.mat.list)
+
+	# Filter entries by the number of target DB
+	target.mat <- ifelse(target.mat < min.cutoff, 0, 1)
+
+	# Outpu
+	return(target.mat)
+	
+}
 
 #' Generate a list of LE genes to be prioritized
 #' 
