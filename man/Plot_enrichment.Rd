@@ -10,7 +10,8 @@ Plot_enrichment(
   target.mat = NULL,
   target.set = NULL,
   direction = "Negative",
-  pal = NULL
+  pal = NULL,
+  alpha = NULL
 )
 }
 \arguments{

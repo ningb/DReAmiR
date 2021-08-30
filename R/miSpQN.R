@@ -366,7 +366,7 @@ normalize_correlation <- function(cor_mat, ave_exp1, ave_exp2, ngrp=20, size_grp
 }
 
 # ==========================================================================
-# Function for running in diffreg
+# Function for running in DReAmiR
 # ==========================================================================
 
 .GetAveExpbySubtype <- function(expr.mat, group.label) {

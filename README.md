@@ -1,11 +1,11 @@
 
-# diffreg
-miRNA targets differential regulation analysis
+# DReAmiR
+**D**ifferential **Re**gulation **A**nalysis for **miR**NAs
 <!-- badges: start -->
 <!-- badges: end -->
 
 ## Introduction
-Rewiring of transcriptional regulatory networks has been implicated in many biological and pathological processes. However, most current methods for detecting rewiring events (differential network connectivity) are not optimized for miRNA-mediated gene regulation and fail to systematically examine predicted target genes in study designs with multiple groups. We developed a novel method to address the current. The method first estimates miRNA-gene expression correlations with Spatial Quantile Normalization to remove the mean-correlation relationship. Then, for each miRNA, genes are ranked by their correlation strength per group. Enrichment patterns of predicted target genes are compared using the Anderson-Darling test and significance levels are estimated via permutation. Finally, graph embedding or difference in enrichment score maximization is performed to prioritize group-specific target genes. 
+Rewiring of transcriptional regulatory networks has been implicated in many biological and pathological processes. However, most current methods for detecting rewiring events (differential network connectivity) are not optimized for miRNA-mediated gene regulation and fail to systematically examine predicted target genes in study designs with multiple groups. We developed a novel method to address the current challenges. The `DReAmiR` method first estimates miRNA-gene expression correlations with Spatial Quantile Normalization to remove the mean-correlation relationship. Then, for each miRNA, genes are ranked by their correlation strength per group. Enrichment patterns of predicted target genes are compared using the Anderson-Darling test and significance levels are estimated via permutation. Finally, graph embedding or difference in enrichment score maximization is performed to prioritize group-specific target genes. 
 
 <img src="media/Workflow.png" height="400px" class="center"/>
 
@@ -14,18 +14,18 @@ R (>= 4.0.0) is recommended.
 
 ## Installation
 
-`diffreg` is still under active development.
+`DReAmiR` is still under active development.
 
 ``` r
 library(devtools)
-install_github("https://github.com/ningb/diffreg")
+install_github("https://github.com/ningb/DReAmiR")
 ```
 
 ## Usage
-Here is the basic workflow for `diffreg`. 
+Here is the basic workflow for `DReAmiR`. 
 ### Load package and read in toy data:
 ``` r
-library(diffreg)
+library(DReAmiR)
 
 # Read-in simulated data
 target.mat <- sim.data[[1]]

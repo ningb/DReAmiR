@@ -437,7 +437,7 @@ Pairwise_postpoc <- function(diffreg.res, cor.list, target.mat, significance=c("
 #' @import grid
 #' @import gridExtra
 #' @export
-Plot_enrichment <- function(cor.list, miR, target.mat=NULL, target.set=NULL, direction="Negative", pal=NULL) {
+Plot_enrichment <- function(cor.list, miR, target.mat=NULL, target.set=NULL, direction="Negative", pal=NULL, alpha=NULL) {
 
 	if (!length(direction) == 1) {
 		stop("There should be only one 'direction'.\n")
@@ -459,7 +459,7 @@ Plot_enrichment <- function(cor.list, miR, target.mat=NULL, target.set=NULL, dir
 		names(pal) <- names(cor.list)
 	}
 
-	if (is.null(target.set) & !is.null(target.set)) {
+	if (is.null(target.set) & !is.null(target.mat)) {
 		target.set <- names(target.mat[,miR][target.mat[,miR]!=0])
 	}
 
@@ -468,7 +468,7 @@ Plot_enrichment <- function(cor.list, miR, target.mat=NULL, target.set=NULL, dir
 
 	pos.list <- lapply(rank.list, function(x) match(target.set, names(x)))
 
-	ws.list <- lapply(rank.list, function(x) .CalcGseaStat(x, target.set, 0.1))
+	ws.list <- lapply(rank.list, function(x) .CalcGseaStat(x, target.set, alpha))
 
 	if (direction == "Negative") {
 		es <- unlist(lapply(ws.list, max))
@@ -481,7 +481,7 @@ Plot_enrichment <- function(cor.list, miR, target.mat=NULL, target.set=NULL, dir
 							Gene=unlist(lapply(ws.list, function(x) names(x))),
 							miRNA=rep(miR, n.gene*n.group),
 							Cor=unlist(ws.list),
-							Subtype=rep(aa, each=n.gene),
+							Subtype=rep(names(cor.list), each=n.gene),
 							ES=unlist(lapply(ws.list, function(x) rank(-x)))
 		)
 
@@ -502,6 +502,7 @@ Plot_enrichment <- function(cor.list, miR, target.mat=NULL, target.set=NULL, dir
 			scale_color_manual(values = pal) +
 			scale_fill_manual(values = pal) +
 			coord_fixed(ratio.values.1 / 2) +
+			ggtitle(miR) +
 			xlab("") + ylab("Enrichment Score") +
 			guides(fill=guide_legend(title="")) +
 			theme_bw() + 

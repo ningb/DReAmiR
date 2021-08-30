@@ -1,4 +1,4 @@
 library(testthat)
-library(diffreg)
+library(DReAmiR)
 
-test_check("diffreg")
+test_check("DReAmiR")

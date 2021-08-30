@@ -1,5 +1,5 @@
-Package: diffreg
-Title: miRNA targets differential regulation analysis
+Package: DReAmiR
+Title: Differential Regulation Analysis of miRNAs
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Boting",
