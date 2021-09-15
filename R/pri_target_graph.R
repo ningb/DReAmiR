@@ -82,7 +82,7 @@ Run_LINE <- function(le.gene, dim=5, edge.sign=c("Negative", "Positive", "Both")
 
 		output <- list(LINE=normalize_matrix, PCA=embed.res)
 
-		return()
+		return(output)
 	} else {
 		return(normalize_matrix)
 	}
@@ -97,6 +97,7 @@ Run_LINE <- function(le.gene, dim=5, edge.sign=c("Negative", "Positive", "Both")
 #' 
 #' @import ggplot2
 #' @importFrom e1071 cmeans
+#' @importFrom cluster silhouette
 #' @import grid
 #' @import gridExtra
 #' @export

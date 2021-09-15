@@ -32,7 +32,7 @@
 #' @return A data frame with ES and test results for each miRNA
 #' 
 #' @importFrom kSamples ad.test
-.diffreg_ad <- function(target.mat, cor.list, min.target.number=5, direction="Negative", alpha) {
+.diffreg_ad <- function(target.mat, cor.list, min.target.number=5, direction="Negative", alpha=NULL) {
 
 	# Format the outputs first
 	ngroup <- length(cor.list)
@@ -102,7 +102,7 @@
 #' @param direction A character string specifying the direction of enrichment, must be "Negative" or "Positive"
 #' @param alpha Weight for running AD/KS test
 #' @return A data frame with ES and test results for each miRNA
-.diffreg_ks <- function(target.mat, cor.list, min.target.number=5, direction="Negative", alpha) {
+.diffreg_ks <- function(target.mat, cor.list, min.target.number=5, direction="Negative", alpha=NULL) {
 
 	# Format the outputs first
 	ks.out <- matrix(nrow=0, ncol=5)
@@ -367,11 +367,12 @@ Run_permutation <- function(diffreg.res, mrna.mat, mirna.mat,
 #' @param target.mat A binary matrix indicating target with miRNA on columns and mRNA on rows
 #' @param significance A character value for type of significance threshold
 #' @param cutoff A numeric value for significance threshold
+#' @param alpha Weight for running AD/KS test
 #' @return A list with ks scores and p-values matrices for each pair-wise comparison
 #' 
 #' @export
 #' 
-Pairwise_postpoc <- function(diffreg.res, cor.list, target.mat, significance=c("Pval", "Perm.pval", "FDR"), cutoff=0.05) {
+Pairwise_postpoc <- function(diffreg.res, cor.list, target.mat, significance=c("Pval", "Perm.pval", "FDR"), cutoff=0.05, alpha=NULL) {
 	if(is.null(significance)) {
 		stop("Must select one significance value from: Pval, Perm.pval, FDR.\n")
 	}
@@ -409,7 +410,7 @@ Pairwise_postpoc <- function(diffreg.res, cor.list, target.mat, significance=c("
 				next
 			} else {
 				cor.list.this <- cor.list[c(i,j)]
-				ks.res.this <- .diffreg_ks(target.mat.use, cor.list.this)
+				ks.res.this <- .diffreg_ks(target.mat.use, cor.list.this, alpha=alpha)
 
 				for (k in row.names(ks.res.this)) {
 					posthoc.res[[k]][["KS"]][i,j] <- ks.res.this[k, "KSval"]

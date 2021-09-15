@@ -9,7 +9,8 @@ Pairwise_postpoc(
   cor.list,
   target.mat,
   significance = c("Pval", "Perm.pval", "FDR"),
-  cutoff = 0.05
+  cutoff = 0.05,
+  alpha = NULL
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ Pairwise_postpoc(
 \item{significance}{A character value for type of significance threshold}
 
 \item{cutoff}{A numeric value for significance threshold}
+
+\item{alpha}{Weight for running AD/KS test}
 }
 \value{
 A list with ks scores and p-values matrices for each pair-wise comparison

@@ -103,10 +103,6 @@ BuildTargetMat <- function(mrna.mat, mirna.mat, DB, org="hsa", gene_id="target_s
 								as.matrix(x[x[,gene_id] %in% row.names(mrna.mat) & x$mature_mirna_id %in% row.names(mirna.mat), ]))
 
 	# Build a binary target matrix for each database queried
-	# Edgelist calculation is quite fast. For-loop can be used here for clarity.
-	# For each edge in the edgelist, fill 1 in that corresponding cell
-	# Using `mature_mirna_id` and the user input `gene_id`
-	# This is done for each DB, so we have several target.mat in a list
 	target.mat.list <- list()
 	for (db.use in DB) {
 		# Initiate an empty target matrix with the same size as mrna*mirna

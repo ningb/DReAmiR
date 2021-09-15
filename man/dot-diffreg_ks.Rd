@@ -10,7 +10,7 @@
   cor.list,
   min.target.number = 5,
   direction = "Negative",
-  alpha
+  alpha = NULL
 )
 }
 \arguments{
