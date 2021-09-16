@@ -156,68 +156,87 @@ AssignTargetCluster <- function(normalize_matrix, select.k=7, group.label, p.cut
 	# Aissgn those can be done easily
 	assigned.clusters <- cluster.res$cluster[group.label]
 
-	# Clusters directly assigned by miRNA node membership or hasn't been clustered
-	cluster.assigned <- as.character(unique(sort(assigned.clusters)))
-	cluster.use <- names(table(cluster.res$cluster))
-	cluster.tbd <- cluster.use[!cluster.use %in% cluster.assigned]
+	# First test if all miR nodes are in the same clusters
+	if (all(assigned.clusters==assigned.clusters[1])) {
+		cluster.gene <- lapply(group.label, function(x) names(cluster.res$cluster)[cluster.res$cluster == assigned.clusters[1]])
+		names(cluster.gene) <- group.label
 
-	# First assigned those that already labelled by miRNA position
-	assign.res <- as.data.frame(cluster.res$membership[, cluster.assigned])
-	assign.res$Cluster <- cluster.res$cluster
-		
-	# For the remaining usable clusters, calculate per miRNA-cluster
-	# one-vs-others one sided KS, and label as one miRNA or multiple
-	# or none
-	ks.res <- matrix(nrow=length(cluster.tbd), ncol=length(cluster.assigned), dimnames=list(cluster.tbd, cluster.assigned))
-	for (i in cluster.tbd) {
-		use.res <- assign.res[assign.res$Cluster == i, ]
-		use.res <- gather(use.res, Names, Value, cluster.assigned[1]:cluster.assigned[length(cluster.assigned)])
-		
-		this.ks <- c()
-		for (j in cluster.assigned){
-			this.res <- ks.test(use.res[use.res$Names == j, ]$Value, use.res[use.res$Names != j, ]$Value, alternative="less")
-			this.ks <- c(this.ks, this.res$p.value)
+		cluster.label <- lapply(as.character(seq(select.k)), function(x){
+						if (x != assigned.clusters[1]) {
+							label <- "Common"
+						} else {
+							label <- paste(group.label, collapse="+")
+						}
+						return(label)
+						})
+		names(cluster.label) <- as.character(seq(select.k))
+
+	} else {
+
+		# Clusters directly assigned by miRNA node membership or hasn't been clustered
+		cluster.assigned <- as.character(unique(sort(assigned.clusters)))
+		cluster.use <- names(table(cluster.res$cluster))
+		cluster.tbd <- cluster.use[!cluster.use %in% cluster.assigned]
+
+		# First assigned those that already labelled by miRNA position
+		assign.res <- as.data.frame(cluster.res$membership[, cluster.assigned])
+		assign.res$Cluster <- cluster.res$cluster
+			
+		# For the remaining usable clusters, calculate per miRNA-cluster
+		# one-vs-others one sided KS, and label as one miRNA or multiple
+		# or none
+		ks.res <- matrix(nrow=length(cluster.tbd), ncol=length(cluster.assigned), dimnames=list(cluster.tbd, cluster.assigned))
+		for (i in cluster.tbd) {
+			use.res <- assign.res[assign.res$Cluster == i, ]
+			use.res <- gather(use.res, Names, Value, cluster.assigned[1]:cluster.assigned[length(cluster.assigned)])
+			
+			this.ks <- c()
+			for (j in cluster.assigned){
+				this.res <- ks.test(use.res[use.res$Names == j, ]$Value, use.res[use.res$Names != j, ]$Value, alternative="less")
+				this.ks <- c(this.ks, this.res$p.value)
+			}
+
+			ks.res[i, ] <- this.ks
+		}
+		ks.res <- ifelse(ks.res <= p.cutoff, 1, 0)
+
+		# Assign the subtype labels to clusters
+		assigned.dat <- as.matrix(data.frame(cluster=assigned.clusters, type=group.label))
+		tbd.list <- lapply(cluster.tbd, function(x) colnames(ks.res)[ks.res[x, ] == 1])
+		tbd.dat <- lapply(tbd.list, function(x) names(assigned.clusters)[as.character(assigned.clusters) %in% x])
+		names(tbd.dat) <- row.names(ks.res)
+
+		# Organize to binary matrix
+		bin.assign.mat <- matrix(nrow=length(cluster.use), ncol=length(group.label), dimnames=list(cluster.use, group.label))
+		bin.assign.mat[assigned.dat[, c(1,2)]] <- 1
+		for (n in names(tbd.dat)) {
+			bin.assign.mat[n, tbd.dat[[n]]] <- 1
 		}
 
-		ks.res[i, ] <- this.ks
+		# Output final cluster assignment as targets per subtype
+		cluster.gene <- lapply(group.label, function(x) {
+						type.vec <- bin.assign.mat[,x]
+						cluster.pick <- names(type.vec)[!is.na(type.vec)]
+						cluster.gene <- names(cluster.res$cluster)[cluster.res$cluster %in% as.numeric(cluster.pick)]
+						cluster.gene[!cluster.gene %in% levels(group.label)]
+						})
+		names(cluster.gene) <- group.label
+		
+		cluster.label <- lapply(row.names(bin.assign.mat), function(x){
+						cluster <- bin.assign.mat[x, ]
+						label <- names(cluster)[!is.na(cluster)]
+						if (length(label) == 0) {
+							label <- "Common"
+						} else if (length(label) == 1){
+							label <- label
+						} else {
+							label <- paste(label, collapse="+")
+						}
+						return(label)
+						})
+		names(cluster.label) <- row.names(bin.assign.mat)
+
 	}
-	ks.res <- ifelse(ks.res <= p.cutoff, 1, 0)
 
-	# Assign the subtype labels to clusters
-	assigned.dat <- as.matrix(data.frame(cluster=assigned.clusters, type=group.label))
-	tbd.list <- lapply(cluster.tbd, function(x) colnames(ks.res)[ks.res[x, ] == 1])
-	tbd.dat <- lapply(tbd.list, function(x) names(assigned.clusters)[as.character(assigned.clusters) %in% x])
-	names(tbd.dat) <- row.names(ks.res)
-
-	# Organize to binary matrix
-	bin.assign.mat <- matrix(nrow=length(cluster.use), ncol=length(group.label), dimnames=list(cluster.use, group.label))
-	bin.assign.mat[assigned.dat[, c(1,2)]] <- 1
-	for (n in names(tbd.dat)) {
-		bin.assign.mat[n, tbd.dat[[n]]] <- 1
-	}
-
-	# Output final cluster assignment as targets per subtype
-	cluster.gene <- lapply(group.label, function(x) {
-					type.vec <- bin.assign.mat[,x]
-					cluster.pick <- names(type.vec)[!is.na(type.vec)]
-					cluster.gene <- names(cluster.res$cluster)[cluster.res$cluster %in% as.numeric(cluster.pick)]
-					cluster.gene[!cluster.gene %in% levels(group.label)]
-					})
-	names(cluster.gene) <- group.label
-	
-	cluster.label <- lapply(row.names(bin.assign.mat), function(x){
-					cluster <- bin.assign.mat[x, ]
-					label <- names(cluster)[!is.na(cluster)]
-					if (length(label) == 0) {
-						label <- "Common"
-					} else if (length(label) == 1){
-						label <- label
-					} else {
-						label <-paste(label, collapse="+")
-					}
-					return(label)
-					})
-	names(cluster.label) <- row.names(bin.assign.mat)
-
-	return(list(GeneList=cluster.gene, Label=cluster.label))
+	return(list(GeneList=cluster.gene, Label=cluster.label, Cluster=cluster.res$cluster))
 }
