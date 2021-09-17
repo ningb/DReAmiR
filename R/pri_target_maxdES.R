@@ -63,9 +63,10 @@
 #' @param cor.list A matrix from Run_LINE()
 #' @param main A character for the name of the group to compared to. 
 #' @param ref A character for the name of the group to compared to. 
+#' @param mir A character for the name of the miRNA to bet tested.
 #' @param direction A character for the direction of enrichment 
 #' @param min.gs.size An integer indicating the minimum number of genes to used. Default is 20.
-#' @param n.iter An integer indicating the number of background to generate for normlizing ES. Default is 50
+#' @param n.iter An integer indicating the number of background to generate for normlizing ES. Default is 500
 #' @param alpha A numeric variable for gsea parameter
 #' @return A character vector of target names
 #' 
@@ -74,7 +75,7 @@
 #' 
 #' @import progress
 #' @export
-Find_Target_Max_dES <- function(gs, cor.list, main, ref, 
+Find_Target_Max_dES <- function(gs, cor.list, main, ref, miR, 
 								direction=c("Negative", "Positive"), 
 								min.gs.size=20, n.iter=500, alpha=0.1) {
 
@@ -97,83 +98,87 @@ Find_Target_Max_dES <- function(gs, cor.list, main, ref,
 		gs <- names(gs)
 	}
 
+	# Check if the miR exists
+	if(is.null(miR)) {
+		stop("Must provide a miRNA to work.\n")
+	}
+
 	# Check if the min.gs.size has already been reached
 	if (length(gs) <= min.gs.size) {
-		stop("The min.gs.size has already been reached. No maximization done.\n")
-	}
-
-	# Format gs and cor.list
-	rank.list <- lapply(cor.list, function(x) sort(x[,miR]))
-
-	ws.list <- lapply(rank.list, function(x) .CalcGseaStat(x, gs, alpha))
-
-	# Calculate NES and dES from the full gs
-	if (direction == "Negative") {
-		es <- unlist(lapply(ws.list, max))
-		
-		main.nes <- es[main] / .Calc_NES_bkgd(gs, rank.list[[main]], direction=direction, n.iter=n.iter, alpha=alpha)
-		ref.nes <- es[ref] / .Calc_NES_bkgd(gs, rank.list[[ref]], direction=direction, n.iter=n.iter, alpha=alpha)
-
-		baseline.des <- main.nes - ref.nes
+		warning("The min.gs.size has already been reached. No maximization done.\n")
+		return(gs)
 	} else {
-		es <- unlist(lapply(ws.list, min))
-		
-		main.nes <- es[main] / .Calc_NES_bkgd(gs, rank.list[[main]], direction=direction, n.iter=n.iter, alpha=alpha)
-		ref.nes <- es[ref] / .Calc_NES_bkgd(gs, rank.list[[ref]], direction=direction, n.iter=n.iter, alpha=alpha)
 
-		baseline.des <- ref.nes - main.nes
-	}
+		# Format gs and cor.list
+		rank.list <- lapply(cor.list, function(x) sort(x[,miR]))
 
-	# Start doing random backward search
-	genes.des <- c()
-	current.gs <- gs
+		ws.list <- lapply(rank.list, function(x) .CalcGseaStat(x, gs, alpha))
 
-	pb <- progress_bar$new(total = 100)
-	for (i in seq_len(length(gs) - min.gs.size)) {
-		  
-		pb$tick()
+		# Calculate NES and dES from the full gs
+		if (direction == "Negative") {
+			es <- unlist(lapply(ws.list, max))
+			
+			main.nes <- es[main] / .Calc_NES_bkgd(gs, rank.list[[main]], direction=direction, n.iter=n.iter, alpha=alpha)
+			ref.nes <- es[ref] / .Calc_NES_bkgd(gs, rank.list[[ref]], direction=direction, n.iter=n.iter, alpha=alpha)
 
-		# Start from all, Calculate new remove.des
-		new.es.res <- .Diff_by_Remove(gs=current.gs, main.rk=rank.list[[main]], ref.rk=rank.list[[ref]], direction=direction, n.iter=n.iter, alpha=alpha)
-		
-		# Decide which one to remove
-		this.remove <- current.gs[which(new.es.res == max(new.es.res))]
+			baseline.des <- main.nes - ref.nes
+		} else {
+			es <- unlist(lapply(ws.list, min))
+			
+			main.nes <- es[main] / .Calc_NES_bkgd(gs, rank.list[[main]], direction=direction, n.iter=n.iter, alpha=alpha)
+			ref.nes <- es[ref] / .Calc_NES_bkgd(gs, rank.list[[ref]], direction=direction, n.iter=n.iter, alpha=alpha)
 
-		# Pick a ranodm one if ties appear
-		this.remove <- ifelse(length(this.remove) > 1, this.remove[sample(1:length(this.remove), 1)], this.remove)
-
-		# Update gene set by deleting the target that gives the largest change
-		current.gs <- current.gs[current.gs != this.remove]
-		
-		# Update dES score
-		new.des <- max(new.es.res)
-
-		# Record the gene removed and the score at the current step
-		genes.des <- setNames(c(genes.des, new.des), c(names(genes.des), this.remove))
-
-		# print(paste("Iteration ", i, " removes ", this.remove, " new dES=", new.des, sep=""))
-
-		# Once we reach the desired number of genes, add the remainig genes to the genes.des and exit loop
-		if (length(current.gs) <= min.gs.size) {
-			print("Reached minimum gs size.")
-			remaining.des <- setNames(rep(0, length(current.gs)), current.gs)
-			genes.des <- c(genes.des, remaining.des)
-			break
+			baseline.des <- ref.nes - main.nes
 		}
 
-		Sys.sleep(1 / 100)
+		# Start doing random backward search
+		genes.des <- c()
+		current.gs <- gs
 
+		pb <- progress_bar$new(total = length(current.gs))
+		for (i in seq_len(length(gs) - min.gs.size)) {
+			
+			pb$tick()
+
+			# Start from all, Calculate new remove.des
+			new.es.res <- .Diff_by_Remove(gs=current.gs, main.rk=rank.list[[main]], ref.rk=rank.list[[ref]], direction=direction, n.iter=n.iter, alpha=alpha)
+			
+			# Decide which one to remove
+			this.remove <- current.gs[which(new.es.res == max(new.es.res))]
+
+			# Pick a ranodm one if ties appear
+			this.remove <- ifelse(length(this.remove) > 1, this.remove[sample(1:length(this.remove), 1)], this.remove)
+
+			# Update gene set by deleting the target that gives the largest change
+			current.gs <- current.gs[current.gs != this.remove]
+			
+			# Update dES score
+			new.des <- max(new.es.res)
+
+			# Record the gene removed and the score at the current step
+			genes.des <- setNames(c(genes.des, new.des), c(names(genes.des), this.remove))
+
+			# print(paste("Iteration ", i, " removes ", this.remove, " new dES=", new.des, sep=""))
+
+			# Once we reach the desired number of genes, add the remainig genes to the genes.des and exit loop
+			if (length(current.gs) <= min.gs.size) {
+				print("Reached minimum gs size.")
+				remaining.des <- setNames(rep(0, length(current.gs)), current.gs)
+				genes.des <- c(genes.des, remaining.des)
+				break
+			}
+
+			Sys.sleep(1 / 100)
+
+		}
+
+		final.gs <- names(genes.des[(which(genes.des == max(genes.des))+1):length(genes.des)])
+
+		# Compare with the full one to see if we actually have increase
+		if (max(genes.des) <= baseline.des) {
+			warning("Can't find better gs for increasing dES. Full one should be use.")
+			final.gs <- gs
+		}
+		return(final.gs)
 	}
-
-	# Find the gene removing which gives the largest dES and select the remainings
-	final.gs <- names(genes.des[(which(genes.des == max(genes.des))+1):length(genes.des)])
-
-	# Compare with the full one to see if we actually have increase
-	if (max(genes.des) <= baseline.des) {
-		warnings("Can't find better gs for increasing dES. Full one should be use.")
-		final.gs <- gs
-	}
-
-	return(final.gs)
-
 }
