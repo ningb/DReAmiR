@@ -1,9 +1,6 @@
 
 # DReAmiR
 **D**ifferential **Re**gulation **A**nalysis for **miR**NAs
-<!-- badges: start -->
-[![R-CMD-check](https://github.com/ningb/DReAmiR/workflows/R-CMD-check/badge.svg)](https://github.com/ningb/DReAmiR/actions)
-<!-- badges: end -->
 
 ## Introduction
 Rewiring of transcriptional regulatory networks has been implicated in many biological and pathological processes. However, most current methods for detecting rewiring events (differential network connectivity) are not optimized for miRNA-mediated gene regulation and fail to systematically examine predicted target genes in study designs with multiple groups. We developed a novel method to address the current challenges. The `DReAmiR` method first estimates miRNA-gene expression correlations with Spatial Quantile Normalization to remove the mean-correlation relationship. Then, for each miRNA, genes are ranked by their correlation strength per group. Enrichment patterns of predicted target genes are compared using the Anderson-Darling test and significance levels are estimated via permutation. Finally, graph embedding or difference in enrichment score maximization is performed to prioritize group-specific target genes. 
