@@ -17,6 +17,8 @@ Run_LINE(
 \item{dim}{An integer indicating number embedded features returned from LINE}
 
 \item{edge.sign}{An character for edge list weight; if negative, the reverse will be use}
+
+\item{do.dim.reduction}{A logical variable, whether to return dimension reduction results}
 }
 \value{
 A matrix of graph embedding features for all the leading edge genes

@@ -26,6 +26,8 @@ Plot_enrichment(
 \item{direction}{A character string specifying the direction of enrichment, must be "Negative" or "Positive"}
 
 \item{pal}{Pallette to use; default will be used if NULL}
+
+\item{alpha}{Weight for running AD/KS test}
 }
 \value{
 An enrichment plot

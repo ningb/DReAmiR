@@ -6,6 +6,15 @@
 \usage{
 plot_signal_condition_exp(cor_mat, ave_exp1, ave_exp2, signal = 0.001)
 }
+\arguments{
+\item{cor_mat}{Correlation matrix}
+
+\item{ave_exp1}{Average expression for mRNA}
+
+\item{ave_exp2}{Average expression for miRNA}
+
+\item{signal}{The top percentage of correlation used as signal}
+}
 \description{
 Plot density plot showing signal (most negative correlation) vs. background per bin
 }

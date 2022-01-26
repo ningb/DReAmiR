@@ -22,7 +22,7 @@
 
 #' Remove each gene in the gs and see what is the changes in the dES
 #' 
-#' @param current.gs A character vector for a set of targets. One element from output of GetLE().
+#' @param gs A character vector for a set of targets. One element from output of GetLE().
 #' @param main.rk A numeric vector for all mRNAs ranked by correlation in the group of interest
 #' @param ref.rk A numeric vector for all mRNAs ranked by correlation in the group to compare with
 #' @param direction A character for the direction of enrichment 
@@ -59,11 +59,11 @@
 
 #' Do backward random search to find set of targets that maximize the normalized dES
 #' 
-#' @param current.gs A character vector for a set of targets. One element from output of GetLE().
+#' @param gs A character vector for a set of targets. One element from output of GetLE().
 #' @param cor.list A matrix from Run_LINE()
 #' @param main A character for the name of the group to compared to. 
 #' @param ref A character for the name of the group to compared to. 
-#' @param mir A character for the name of the miRNA to bet tested.
+#' @param miR A character for the name of the miRNA to bet tested.
 #' @param direction A character for the direction of enrichment 
 #' @param min.gs.size An integer indicating the minimum number of genes to used. Default is 20.
 #' @param n.iter An integer indicating the number of background to generate for normlizing ES. Default is 500

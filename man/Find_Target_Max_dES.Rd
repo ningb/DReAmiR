@@ -17,11 +17,15 @@ Find_Target_Max_dES(
 )
 }
 \arguments{
+\item{gs}{A character vector for a set of targets. One element from output of GetLE().}
+
 \item{cor.list}{A matrix from Run_LINE()}
 
 \item{main}{A character for the name of the group to compared to.}
 
 \item{ref}{A character for the name of the group to compared to.}
+
+\item{miR}{A character for the name of the miRNA to bet tested.}
 
 \item{direction}{A character for the direction of enrichment}
 
@@ -30,10 +34,6 @@ Find_Target_Max_dES(
 \item{n.iter}{An integer indicating the number of background to generate for normlizing ES. Default is 500}
 
 \item{alpha}{A numeric variable for gsea parameter}
-
-\item{current.gs}{A character vector for a set of targets. One element from output of GetLE().}
-
-\item{mir}{A character for the name of the miRNA to bet tested.}
 }
 \value{
 A character vector of target names

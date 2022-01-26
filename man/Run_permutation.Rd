@@ -29,6 +29,8 @@ Run_permutation(
 
 \item{raw.mirna.mat}{(optional) A raw matrix of miRNA expression (genes at rows and samples at columns)}
 
+\item{do.spqn}{A logical variable indication whether SpQN should be done}
+
 \item{target.mat}{A binary matrix indicating target with miRNA on columns and mRNA on rows}
 
 \item{group.label}{A factor vector subtype label for the samples}

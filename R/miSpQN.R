@@ -68,6 +68,8 @@ get_condition_exp <- function(cor_mat, ave_exp1, ave_exp2){
 
 #' Plot heatmap shwoing the Q1 and IQR of correlation coefficients distribution per bin x bin
 #' 
+#' @param IQR_list A list for IQR
+#' 
 #' @import corrplot
 #' @import viridis
 #' @export
@@ -97,6 +99,11 @@ plot_IQR_condition_exp_Corplot <- function(IQR_list) {
 }
 
 #' Plot density plot showing signal (most negative correlation) vs. background per bin
+#' 
+#' @param cor_mat Correlation matrix
+#' @param ave_exp1 Average expression for mRNA
+#' @param ave_exp2 Average expression for miRNA
+#' @param signal The top percentage of correlation used as signal
 #' 
 #' @import ggplot2
 #' @import ggridges

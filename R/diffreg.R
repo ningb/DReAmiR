@@ -218,6 +218,7 @@ Run_diffreg <- function(cor.list, target.mat, min.target.number=5, direction="Ne
 #' @param mirna.mat A matrix of miRNA expression (genes at rows and samples at columns)
 #' @param raw.mrna.mat (optional) A raw matrix of mRNA expression (genes at rows and samples at columns)
 #' @param raw.mirna.mat (optional) A raw matrix of miRNA expression (genes at rows and samples at columns)
+#' @param do.spqn A logical variable indication whether SpQN should be done
 #' @param target.mat A binary matrix indicating target with miRNA on columns and mRNA on rows
 #' @param group.label A factor vector subtype label for the samples
 #' @param do.parallel A logical variable indicating whether parallization will be performed
@@ -431,6 +432,7 @@ Pairwise_postpoc <- function(diffreg.res, cor.list, target.mat, significance=c("
 #' @param target.set A vector of targets for plotting
 #' @param direction A character string specifying the direction of enrichment, must be "Negative" or "Positive"
 #' @param pal Pallette to use; default will be used if NULL
+#' @param alpha Weight for running AD/KS test
 #' @return An enrichment plot
 #' 
 #' @import ggplot2

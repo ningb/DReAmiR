@@ -7,6 +7,8 @@
 .Diff_by_Remove(gs, main.rk, ref.rk, direction, n.iter, alpha)
 }
 \arguments{
+\item{gs}{A character vector for a set of targets. One element from output of GetLE().}
+
 \item{main.rk}{A numeric vector for all mRNAs ranked by correlation in the group of interest}
 
 \item{ref.rk}{A numeric vector for all mRNAs ranked by correlation in the group to compare with}
@@ -16,8 +18,6 @@
 \item{n.iter}{An integer for the number of background to generate. Default is 500}
 
 \item{alpha}{A numeric value for the gsea param}
-
-\item{current.gs}{A character vector for a set of targets. One element from output of GetLE().}
 }
 \value{
 A numberic vector of the dES for removing each gene in gs

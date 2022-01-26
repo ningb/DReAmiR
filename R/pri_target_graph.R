@@ -3,6 +3,7 @@
 #' @param le.gene A list of correlation matrices with miRNA on columns and mRNA on rows
 #' @param dim An integer indicating number embedded features returned from LINE
 #' @param edge.sign An character for edge list weight; if negative, the reverse will be use
+#' @param do.dim.reduction A logical variable, whether to return dimension reduction results
 #' @return A matrix of graph embedding features for all the leading edge genes
 #' 
 #' @export
@@ -51,7 +52,7 @@ Run_LINE <- function(le.gene, dim=5, edge.sign=c("Negative", "Positive", "Both")
 	line_one_matrix <- line(reconstruct_df, dim = dim, order = 1, negative = 5, samples = 10, rho = 0.025)
 	line_two_matrix <- line(reconstruct_df, dim = dim, order = 2, negative = 5, samples = 10, rho = 0.025)
 	concatenate_matrix <- concatenate(line_one_matrix, line_two_matrix)
-	normalize_matrix <- rline::normalize(concatenate_matrix)
+	normalize_matrix <- normalize(concatenate_matrix)
 
 	# Check if doing PCA is needed (mostly for visualization)
 	if (do.dim.reduction == TRUE) {
