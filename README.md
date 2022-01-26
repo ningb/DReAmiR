@@ -2,6 +2,7 @@
 # DReAmiR
 **D**ifferential **Re**gulation **A**nalysis for **miR**NAs
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/ningb/DReAmiR/workflows/R-CMD-check/badge.svg)](https://github.com/ningb/DReAmiR/actions)
 <!-- badges: end -->
 
 ## Introduction
