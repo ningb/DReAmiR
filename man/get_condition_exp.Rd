@@ -19,7 +19,3 @@ a list for IQR/Q1/average expression for mRNA and miRNA
 \description{
 Calculate IQR and Q1 per bin x bin; Calculate expression mean per bin
 }
-\examples{
-IQR_list <- get_condition_exp(cor_mat, ave_exp1, ave_exp2)
-
-}

@@ -70,9 +70,6 @@
 #' @param alpha A numeric variable for gsea parameter
 #' @return A character vector of target names
 #' 
-#' @examples
-#' Find_Target_Max_dES(le.gene[[1]], cor.list, "A", "B", direction="Negative")
-#' 
 #' @import progress
 #' @export
 Find_Target_Max_dES <- function(gs, cor.list, main, ref, miR, 

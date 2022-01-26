@@ -9,6 +9,7 @@ Find_Target_Max_dES(
   cor.list,
   main,
   ref,
+  miR,
   direction = c("Negative", "Positive"),
   min.gs.size = 20,
   n.iter = 500,
@@ -26,19 +27,17 @@ Find_Target_Max_dES(
 
 \item{min.gs.size}{An integer indicating the minimum number of genes to used. Default is 20.}
 
-\item{n.iter}{An integer indicating the number of background to generate for normlizing ES. Default is 50}
+\item{n.iter}{An integer indicating the number of background to generate for normlizing ES. Default is 500}
 
 \item{alpha}{A numeric variable for gsea parameter}
 
 \item{current.gs}{A character vector for a set of targets. One element from output of GetLE().}
+
+\item{mir}{A character for the name of the miRNA to bet tested.}
 }
 \value{
 A character vector of target names
 }
 \description{
 Do backward random search to find set of targets that maximize the normalized dES
-}
-\examples{
-Find_Target_Max_dES(le.gene[[1]], cor.list, "A", "B", direction="Negative")
-
 }

@@ -136,6 +136,7 @@ max.dES.result <- Find_Target_Max_dES(
 	cor.list  = cor.list,
 	main      = "A",
 	ref       = "B",
+	miR       = "miR_1", 
 	direction = "Negative"
 	)
 ```

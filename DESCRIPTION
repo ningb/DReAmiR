@@ -18,3 +18,21 @@ Depends:
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Imports:
+    RColorBrewer, 
+    corrplot, 
+    ggplot2, 
+    ggrepel, 
+    ggridges, 
+    grid, 
+    gridExtra, 
+    multiMiR,
+    parallel, 
+    progress, 
+    rline, 
+    viridis, 
+    MASS,
+    cluster,
+    e1071,
+    kSamples,
+    lqmm

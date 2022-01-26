@@ -9,7 +9,3 @@ plot_IQR_condition_exp_Corplot(IQR_list)
 \description{
 Plot heatmap shwoing the Q1 and IQR of correlation coefficients distribution per bin x bin
 }
-\examples{
-plot_IQR_condition_exp_Corplot(IQR_list)
-
-}

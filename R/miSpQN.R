@@ -32,9 +32,6 @@
 #' @param ave_exp2 A numeric vecotr with same length as the ncol(cor_mat) for average miRNA expressions
 #' @return a list for IQR/Q1/average expression for mRNA and miRNA
 #' 
-#' @examples
-#' IQR_list <- get_condition_exp(cor_mat, ave_exp1, ave_exp2)
-#' 
 #' @export
 get_condition_exp <- function(cor_mat, ave_exp1, ave_exp2){
     idx1 <- order(ave_exp1)
@@ -71,9 +68,6 @@ get_condition_exp <- function(cor_mat, ave_exp1, ave_exp2){
 
 #' Plot heatmap shwoing the Q1 and IQR of correlation coefficients distribution per bin x bin
 #' 
-#' @examples 
-#' plot_IQR_condition_exp_Corplot(IQR_list)
-#' 
 #' @import corrplot
 #' @import viridis
 #' @export
@@ -103,9 +97,6 @@ plot_IQR_condition_exp_Corplot <- function(IQR_list) {
 }
 
 #' Plot density plot showing signal (most negative correlation) vs. background per bin
-#' 
-#' @examples 
-#' plot_signal_condition_exp(cor_mat, ave_exp1, ave_exp2, signal=0.001)
 #' 
 #' @import ggplot2
 #' @import ggridges

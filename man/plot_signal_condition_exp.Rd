@@ -9,7 +9,3 @@ plot_signal_condition_exp(cor_mat, ave_exp1, ave_exp2, signal = 0.001)
 \description{
 Plot density plot showing signal (most negative correlation) vs. background per bin
 }
-\examples{
-plot_signal_condition_exp(cor_mat, ave_exp1, ave_exp2, signal=0.001)
-
-}
