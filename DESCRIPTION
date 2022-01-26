@@ -29,10 +29,11 @@ Imports:
     multiMiR,
     parallel, 
     progress, 
-    rline, 
     viridis, 
     MASS,
     cluster,
     e1071,
     kSamples,
     lqmm
+Remotes:
+    github::YosefLab/rline
