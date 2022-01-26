@@ -406,6 +406,7 @@ RunGroupSpQN <- function(mrna.mat, mirna.mat, group.label, cor.list, numCores=1,
 														ave_exp2=mirna_ave_exp[[x]], 
 														...),
 														mc.cores = numCores)
-
+	
+	names(perm.spqn.cor.mat.list) <- names(cor.list)
 	return(perm.spqn.cor.mat.list)
 }
