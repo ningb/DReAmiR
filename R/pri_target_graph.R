@@ -5,7 +5,6 @@
 #' @param edge.sign An character for edge list weight; if negative, the reverse will be use
 #' @return A matrix of graph embedding features for all the leading edge genes
 #' 
-#' @import rline
 #' @export
 Run_LINE <- function(le.gene, dim=5, edge.sign=c("Negative", "Positive", "Both"), do.dim.reduction=TRUE) {
 
