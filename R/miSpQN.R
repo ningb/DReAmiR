@@ -313,14 +313,14 @@ plot_signal_condition_exp <- function(cor_mat, ave_exp1, ave_exp2, signal=0.001)
 #' @param ave_exp1 A numeric vecotr with same length as the nrow(cor_mat) for average mRNA expressions
 #' @param ave_exp2 A numeric vecotr with same length as the ncol(cor_mat) for average miRNA expressions
 #' @param ngrp An integer for number of inner bins. Default is 20
-#' @param size_grp A numeric vector of length 2 for number of mRNA and miRNA per outer group. Default c(1000, 300)
+#' @param size_grp A numeric vector of length 2 for number of mRNA and miRNA per outer group. Default c(1000, 150)
 #' @param ref_grp An integer for the index of bin to use as reference. Default is 18
 #' @return A normalized correlation matrix with the same dimension as cor_mat
 #' 
 #' @import corrplot
 #' @import viridis
 #' @export
-normalize_correlation <- function(cor_mat, ave_exp1, ave_exp2, ngrp=20, size_grp=c(1000,300), ref_grp=18){
+normalize_correlation <- function(cor_mat, ave_exp1, ave_exp2, ngrp=20, size_grp=c(1000,150), ref_grp=18){
     stopifnot(length(ngrp) == 1, length(size_grp) == 2, length(ref_grp) == 1)
     stopifnot(ref_grp <= ngrp)
     stopifnot(0 < ngrp, 0 < ref_grp)
