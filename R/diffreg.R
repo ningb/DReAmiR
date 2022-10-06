@@ -7,7 +7,7 @@
 .CalcGseaStat <- function(ranklist, gs, alpha=NULL) {
 
 	if (is.null(alpha)) {
-		alpha <- 0.1
+		alpha <- 1
 	}
 
 	id.inside <- ifelse(names(ranklist) %in% gs, 1, 0)
@@ -173,7 +173,7 @@
 #' @importFrom kSamples ad.test
 #' @export
 #' 
-Run_diffreg <- function(cor.list, target.mat, min.target.number=5, direction="Negative", alpha=0.1) {
+Run_diffreg <- function(cor.list, target.mat, min.target.number=5, direction="Negative", alpha=1) {
 
 	if (!length(direction) == 1) {
 		stop("There should be only one 'direction'.\n")
@@ -507,6 +507,7 @@ Plot_enrichment <- function(cor.list, miR, target.mat=NULL, target.set=NULL, dir
 			coord_fixed(ratio.values.1 / 2) +
 			ggtitle(miR) +
 			xlab("") + ylab("Enrichment Score") +
+			xlim(0, n.gene) +
 			guides(fill=guide_legend(title="")) +
 			theme_bw() + 
 			theme(panel.grid.major = element_blank(),
@@ -521,6 +522,7 @@ Plot_enrichment <- function(cor.list, miR, target.mat=NULL, target.set=NULL, dir
 			scale_fill_manual(values = pal) +
 			coord_fixed(ratio.values.2 / 6) +
 			xlab("Position") + ylab("Group") + 
+			xlim(0, n.gene) +
 			guides(fill=guide_legend(title="")) +
 			theme_ridges(grid = FALSE) + 
 			theme_bw() +

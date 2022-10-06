@@ -9,7 +9,7 @@ GetLE(
   target.mat,
   miR,
   direction = c("Negative", "Positive"),
-  alpha = 0.1,
+  alpha = 1,
   with.weight = TRUE
 )
 }
@@ -22,7 +22,7 @@ GetLE(
 
 \item{direction}{A character string specifying the direction of enrichment, must be "Negative", "Positive" or "Both"}
 
-\item{alpha}{Weight for running AD/KS test. Default is 0.1}
+\item{alpha}{Weight for running AD/KS test. Default is 1}
 
 \item{with.weight}{Logic of whether to return weights as well}
 }

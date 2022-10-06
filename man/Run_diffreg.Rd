@@ -9,7 +9,7 @@ Run_diffreg(
   target.mat,
   min.target.number = 5,
   direction = "Negative",
-  alpha = 0.1
+  alpha = 1
 )
 }
 \arguments{

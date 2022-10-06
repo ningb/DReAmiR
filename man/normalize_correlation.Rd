@@ -9,7 +9,7 @@ normalize_correlation(
   ave_exp1,
   ave_exp2,
   ngrp = 20,
-  size_grp = c(1000, 300),
+  size_grp = c(1000, 150),
   ref_grp = 18
 )
 }
@@ -22,7 +22,7 @@ normalize_correlation(
 
 \item{ngrp}{An integer for number of inner bins. Default is 20}
 
-\item{size_grp}{A numeric vector of length 2 for number of mRNA and miRNA per outer group. Default c(1000, 300)}
+\item{size_grp}{A numeric vector of length 2 for number of mRNA and miRNA per outer group. Default c(1000, 150)}
 
 \item{ref_grp}{An integer for the index of bin to use as reference. Default is 18}
 }

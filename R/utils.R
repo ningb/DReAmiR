@@ -132,12 +132,12 @@ BuildTargetMat <- function(mrna.mat, mirna.mat, DB, org="hsa", gene_id="target_s
 #' @param miR miRNA to plot
 #' @param target.mat A binary matrix indicating target with miRNA on columns and mRNA on rows
 #' @param direction A character string specifying the direction of enrichment, must be "Negative", "Positive" or "Both"
-#' @param alpha Weight for running AD/KS test. Default is 0.1
+#' @param alpha Weight for running AD/KS test. Default is 1
 #' @param with.weight Logic of whether to return weights as well
 #' @return An list of leading edge genes for each group
 #' 
 #' @export
-GetLE <- function(cor.list, target.mat, miR, direction=c("Negative", "Positive"), alpha=0.1, with.weight=TRUE) {
+GetLE <- function(cor.list, target.mat, miR, direction=c("Negative", "Positive"), alpha=1, with.weight=TRUE) {
 
 	if (!length(direction) == 1) {
 		stop("There should be only one 'direction'.\n")

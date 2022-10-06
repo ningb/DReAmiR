@@ -74,7 +74,7 @@
 #' @export
 Find_Target_Max_dES <- function(gs, cor.list, main, ref, miR, 
 								direction=c("Negative", "Positive"), 
-								min.gs.size=20, n.iter=500, alpha=0.1) {
+								min.gs.size=20, n.iter=500, alpha=1) {
 
 	# Check if main and ref are in cor.list
 	if(!main %in% names(cor.list) | !ref %in% names(cor.list)) {

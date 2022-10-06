@@ -13,7 +13,7 @@ Find_Target_Max_dES(
   direction = c("Negative", "Positive"),
   min.gs.size = 20,
   n.iter = 500,
-  alpha = 0.1
+  alpha = 1
 )
 }
 \arguments{
