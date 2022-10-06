@@ -1,4 +1,8 @@
 
+# Modified based on SpQN Developed by Wang Y et al 
+# from https://www.biorxiv.org/content/10.1101/2020.02.13.944777v1.
+# Please let me know if there is any license related issue.
+
 # ****************************************************************************
 # *           Try to modify SPQN to accomendate miRNA-mRNA network           *
 # *                   1) Binning miRNA and mRNA separately                   *
