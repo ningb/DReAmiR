@@ -4,6 +4,7 @@
 #' @param gs A character vector for the set of targets of interest
 #' @param alpha A numeric variable for gsea parameter
 #' @return A walking score vector
+# Code adapted from Hänzelmann S., Castelo R. and Guinney J. GSVA: gene set variation analysis for microarray and RNA-Seq data. BMC Bioinformatics, 14:7, 2013
 .CalcGseaStat <- function(ranklist, gs, alpha=NULL) {
 
 	if (is.null(alpha)) {
