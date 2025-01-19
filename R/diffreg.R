@@ -13,8 +13,7 @@
 
 	id.inside <- ifelse(names(ranklist) %in% gs, 1, 0)
 
-	CDF.in <- cumsum((abs(ranklist)^alpha * id.inside)) /
-	                  sum((abs(ranklist)^alpha * id.inside))
+	CDF.in <- cumsum((abs(ranklist)^alpha * id.inside)) / sum((abs(ranklist)^alpha * id.inside))
 
 	CDF.notin <- cumsum(!id.inside) / sum(!id.inside)
 
